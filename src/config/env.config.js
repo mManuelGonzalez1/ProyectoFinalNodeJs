@@ -1,10 +1,14 @@
 import dotenv from "dotenv";
 
 dotenv.config();
-
-const config = {
-  port: process.env.PORT,
-  node_env: process.env.NODE_ENV,
-};
-
+const requiredEnvVals = ["PORT", "NODE_ENV"];
+const missingVars = requiredEnvVals.filter((key) => !process.env[key]);
+if (missingVars.length > 0) {
+  throw new Error("Faltan variables de entorno");
+} else {
+  const config = {
+    port: process.env.PORT,
+    node_env: process.env.NODE_ENV,
+  };
+}
 export default config;
