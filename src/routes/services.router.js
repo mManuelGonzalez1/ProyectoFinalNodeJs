@@ -42,4 +42,41 @@ router.get("/:sid", async (req, res) => {
     res.status(500).json({ status: "error", message: error.message });
   }
 });
+
+router.post("/", async (req, res) => {
+  try {
+    const newService = await serviceManager.addService(req.body);
+    res.status(200).json({
+      status: "success",
+      payload: newService,
+      message: "Servicio creado con exito",
+    });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
+  }
+});
+
+router.put("/:sid", async (req, res) => {
+  try {
+    const { sid } = req.params;
+    const updatedService = await serviceManager.updateService(sid, req.body);
+    res.status(200).json({ status: "success", payload: updatedService });
+  } catch (error) {
+    res.status(404).json({ status: "error", message: error.message });
+  }
+});
+
+router.delete("/:sid", async (req, res) => {
+  try {
+    const { sid } = req.params;
+    const deletedService = await serviceManager.deleteService(sid);
+    res.status(200).json({
+      status: "success",
+      message: "Servicio eliminado con exito",
+      payload: deletedService,
+    });
+  } catch (error) {
+    res.status(404).json({ status: "error", message: error.message });
+  }
+});
 export default router;

@@ -1,14 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "Mantenimiento de computadoras",
-    "description": "Revision preventiva de computadoras",
-    "duration": "150 min",
-    "price": 90,
-    "category": "Maintenance",
-    "available": true
-  },
-  {
     "id": 2,
     "name": "Mantenimiento de aviones",
     "description": "Revision preventiva de motores",
@@ -53,6 +44,15 @@
     "duration": "150 min",
     "price": 1390,
     "category": "review",
+    "available": true
+  },
+  {
+    "id": "c6c56ad4-bb31-4923-b579-8a8f1e2387cb",
+    "name": "Reparación de computadora",
+    "description": "Diagnóstico y reparación",
+    "duration": "120 min",
+    "price": 100,
+    "category": "Maintenance",
     "available": true
   }
 ]

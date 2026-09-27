@@ -2,7 +2,7 @@
 
 ## Descripcion
 
-Aplicacion de Node.js para administrar servicios mediante la clase `ServiceManager`. Los servicios se almacenan de forma persistente en el archivo `src/data/services.json`.
+API REST de Node.js y Express para administrar servicios mediante la clase `ServiceManager`. Los servicios se almacenan de forma persistente en el archivo `src/data/services.json`.
 
 El proyecto permite consultar, agregar, actualizar y eliminar servicios.
 
@@ -26,28 +26,69 @@ cd proyectoFinalNodeJS
 npm install
 ```
 
-## Variables de entorno
-
-El archivo `src/config/env.config.js` requiere las siguientes variables:
-
-```env
-PORT=3000
-NODE_ENV=development
-```
-
-Crea un archivo `.env` en la raiz del proyecto con esos valores. `dotenv` se encarga de cargarlos automaticamente.
-
-> Actualmente `src/app.js` no importa `env.config.js`. Las variables son necesarias cuando se utilice ese modulo de configuracion.
-
 ## Ejecucion
 
-Desde la raiz del proyecto ejecuta:
+Desde la raiz del proyecto inicia el servidor:
 
 ```bash
-node src/app.js
+node src/server.js
 ```
 
-El archivo `src/app.js` ejecuta un ejemplo que consulta, agrega, busca, actualiza y elimina un servicio.
+El servidor queda disponible en `http://localhost:8080`. Puedes cambiar el puerto definiendo la variable de entorno `PORT`. Mantén la terminal abierta mientras utilizas la API.
+
+## API de servicios
+
+Todas las rutas comienzan con `/api/services`.
+
+| Metodo   | Ruta                 | Descripcion                      |
+| -------- | -------------------- | -------------------------------- |
+| `GET`    | `/api/services`      | Obtiene todos los servicios.     |
+| `GET`    | `/api/services/:sid` | Obtiene un servicio por ID.      |
+| `POST`   | `/api/services`      | Crea un servicio.                |
+| `PUT`    | `/api/services/:sid` | Actualiza un servicio existente. |
+| `DELETE` | `/api/services/:sid` | Elimina un servicio.             |
+
+La consulta de todos los servicios acepta los filtros opcionales `category` y `available`:
+
+```text
+GET /api/services?category=Maintenance
+GET /api/services?available=true
+GET /api/services?category=Maintenance&available=true
+```
+
+Los valores de `category` deben coincidir exactamente con la categoria guardada. Para `available`, utiliza `true` o `false`.
+
+### Probar con Thunder Client
+
+1. Inicia el servidor con `node src/server.js`.
+2. En VS Code, abre Thunder Client y selecciona **New Request**.
+3. Elige el metodo HTTP, ingresa la URL completa y pulsa **Send**.
+4. Para `POST` y `PUT`, abre **Body**, selecciona **JSON** y envia el objeto correspondiente.
+
+Ejemplos de URL:
+
+```text
+GET    http://localhost:8080/api/services
+GET    http://localhost:8080/api/services/1
+GET    http://localhost:8080/api/services?category=Maintenance
+```
+
+Ejemplo de body JSON para crear un servicio (`POST /api/services`):
+
+```json
+{
+  "name": "Reparacion de computadora",
+  "description": "Diagnostico y reparacion",
+  "duration": "120 min",
+  "price": 100,
+  "category": "Maintenance",
+  "available": true
+}
+```
+
+Al crear un servicio, la API genera el `id` automaticamente. Usa el ID devuelto para probar `GET`, `PUT` o `DELETE` sobre ese servicio. `PUT` acepta un objeto JSON con los campos a actualizar; no se puede cambiar el ID.
+
+Las respuestas exitosas tienen el estado `200` y un objeto JSON con `status: "success"` y `payload`. Si no se encuentra un servicio por ID, la API responde con `404`.
 
 ## Recurso `services`
 
@@ -111,7 +152,7 @@ const service = await manager.getServiceById(1);
 console.log(service);
 ```
 
-Si no encuentra el servicio, devuelve un mensaje indicando que el ID no existe.
+Si no encuentra el servicio, devuelve `null`.
 
 ### `addService(serviceData)`
 
@@ -200,12 +241,15 @@ main().catch((error) => {
 ```text
 src/
   app.js
+  server.js
   config/
     env.config.js
   data/
     services.json
   managers/
     serviceManager.js
+  routes/
+    services.router.js
 package.json
 README.md
 ```
