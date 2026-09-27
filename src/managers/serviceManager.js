@@ -58,11 +58,12 @@ class ServiceManager {
     if (updatedData.id !== service.id && updatedData.id !== undefined) {
       throw new Error("El id no se puede cambiar");
     }
-    service = {
-      ...service,
+    services = {
+      ...services,
       ...updatedData,
     };
-    return service;
+    await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
+    return services;
   }
   deleteServiceById(id) {
     const posicion = this.services.findIndex((value) => value.id == id);
