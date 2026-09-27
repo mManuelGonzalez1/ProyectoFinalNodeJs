@@ -55,22 +55,29 @@ class ServiceManager {
         "No encontramos el servicio, no podemos actualizarlo, por favor intenta de nuevo",
       );
     }
-    if (updatedData.id !== service.id && updatedData.id !== undefined) {
+    if (
+      updatedData.id !== services[posicion].id &&
+      updatedData.id !== undefined
+    ) {
       throw new Error("El id no se puede cambiar");
     }
-    services = {
-      ...services,
+    const updatedService = {
+      ...services[posicion],
       ...updatedData,
+      id,
     };
+    services[posicion] = updatedService;
     await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
-    return services;
+    return updatedService;
   }
-  deleteServiceById(id) {
-    const posicion = this.services.findIndex((value) => value.id == id);
+  async deleteServiceById(id) {
+    const services = await this.getServices();
+    const posicion = services.findIndex((value) => value.id == id);
     console.log(posicion);
     if (posicion != -1) {
-      this.services.splice(posicion, 1);
-      return this.services;
+      services.splice(posicion, 1);
+      await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
+      return services;
     } else {
       return "No se encontro el id solicitdo, por favor intentalo nuevamente";
     }
