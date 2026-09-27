@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Mantenimiento de computadoras",
+    "description": "Revision preventiva de computadoras",
+    "duration": "150 min",
+    "price": 90,
+    "category": "Maintenance",
+    "available": true
+  },
+  {
+    "id": 2,
+    "name": "Mantenimiento de aviones",
+    "description": "Revision preventiva de motores",
+    "duration": "400 min",
+    "price": 390,
+    "category": "Maintenance",
+    "available": true
+  }
+]

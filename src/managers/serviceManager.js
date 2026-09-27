@@ -1,46 +1,22 @@
+import fs from "fs/promises";
 import crypto from "crypto";
 
 class ServiceManager {
-  constructor() {
-    this.services = [
-      {
-        id: 1,
-        name: "Mantenimiento de computadoras",
-        description: "Revision preventiva de computadoras",
-        duration: "150 min",
-        price: 90,
-        category: "Maintenance",
-        available: true,
-      },
-      {
-        id: 2,
-        name: "Mantenimiento de aviones",
-        description: "Revision preventiva de motores",
-        duration: "400 min",
-        price: 390,
-        category: "Maintenance",
-        available: true,
-      },
-    ];
+  constructor(path = "./src/data/services.json") {
+    this.path = path;
   }
-  getServiceById(id) {
-    const result = this.services.find((service) => service.id === id);
+  async getServiceById(id) {
+    const services = await this.getServices();
+    const result = services.find((service) => service.id === id);
     if (result) {
       return result;
     } else {
       return "No se encontro el id del servicio buscado, por favor intenta nuevamente";
     }
   }
-  createService(name, description, duration, price, category, available) {
-    const newService = {
-      id: crypto.randomUUID(),
-      name,
-      description,
-      duration,
-      price,
-      category,
-      available,
-    };
+  async addService(serviceData) {
+    const { name, description, duration, price, category, available } =
+      serviceData;
     if (
       name !== undefined &&
       name !== "" &&
@@ -55,18 +31,32 @@ class ServiceManager {
       available !== undefined &&
       available !== ""
     ) {
-      this.services.push(newService);
-      return this.services;
-    } else {
-      return "Por favor digita los campos completos";
+      throw new Error("Por favor completa todos los campos");
     }
+    const services = await this.getServices();
+    const newService = {
+      id: crypto.randomUUID(),
+      name,
+      description,
+      duration,
+      price,
+      category,
+      available,
+    };
+    services.push(newService);
+    await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
+    return newService;
   }
-  updateService(id, updatedData) {
-    let service = this.getServiceById(id);
-    if (!service)
-      return "No encontramos el servicio, no podemos actualizarlo, por favor intenta de nuevo";
+  async updateService(id, updatedData) {
+    const services = await this.getServices();
+    const posicion = services.findIndex((value) => value.id == id);
+    if (posicion === -1) {
+      throw new Error(
+        "No encontramos el servicio, no podemos actualizarlo, por favor intenta de nuevo",
+      );
+    }
     if (updatedData.id !== service.id && updatedData.id !== undefined) {
-      return "No podemos actualizar el id";
+      throw new Error("El id no se puede cambiar");
     }
     service = {
       ...service,
@@ -84,8 +74,13 @@ class ServiceManager {
       return "No se encontro el id solicitdo, por favor intentalo nuevamente";
     }
   }
-  getServices() {
-    return this.services;
+  async getServices() {
+    try {
+      const data = await fs.readFile(this.path, "utf-8");
+      return JSON.parse(data);
+    } catch (error) {
+      return [];
+    }
   }
 }
 
