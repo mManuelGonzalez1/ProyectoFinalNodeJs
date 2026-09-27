@@ -18,18 +18,18 @@ class ServiceManager {
     const { name, description, duration, price, category, available } =
       serviceData;
     if (
-      name !== undefined &&
-      name !== "" &&
-      description !== undefined &&
-      description !== "" &&
-      duration !== undefined &&
-      duration !== "" &&
-      price !== undefined &&
-      price !== "" &&
-      category !== undefined &&
-      category !== "" &&
-      available !== undefined &&
-      available !== ""
+      name === undefined ||
+      name === "" ||
+      description === undefined ||
+      description === "" ||
+      duration === undefined ||
+      duration === "" ||
+      price === undefined ||
+      price === "" ||
+      category === undefined ||
+      category === "" ||
+      available === undefined ||
+      available === ""
     ) {
       throw new Error("Por favor completa todos los campos");
     }
@@ -70,7 +70,7 @@ class ServiceManager {
     await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
     return updatedService;
   }
-  async deleteServiceById(id) {
+  async deleteService(id) {
     const services = await this.getServices();
     const posicion = services.findIndex((value) => value.id == id);
     console.log(posicion);
@@ -79,7 +79,9 @@ class ServiceManager {
       await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
       return services;
     } else {
-      return "No se encontro el id solicitdo, por favor intentalo nuevamente";
+      throw new Error(
+        "No se encontro el id solicitdo, por favor intentalo nuevamente",
+      );
     }
   }
   async getServices() {
@@ -91,23 +93,4 @@ class ServiceManager {
     }
   }
 }
-
-const obj = new ServiceManager();
-const find = new ServiceManager();
-const update = new ServiceManager();
-const deleted = new ServiceManager();
-const create = new ServiceManager();
-console.log(obj.getServices());
-console.log(find.getServiceById(2));
-console.log(update.updateService(1, { name: "Servicio de limpieza" }));
-console.log(deleted.deleteServiceById(2));
-console.log(
-  create.createService(
-    "Mantenimiento de bicicletas",
-    "Revision preventiva",
-    "150 min",
-    900,
-    "maintenace",
-    true,
-  ),
-);
+export default ServiceManager;

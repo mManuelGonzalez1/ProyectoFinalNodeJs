@@ -16,5 +16,43 @@
     "price": 390,
     "category": "Maintenance",
     "available": true
+  },
+  {
+    "id": "6be3f66d-2525-4dfc-8172-3f2625e41746",
+    "name": "Mantenimiento de bicicletas",
+    "description": "Revision preventiva",
+    "category": "maintenace"
+  },
+  {
+    "id": "dc6260e4-5b67-41f5-8244-1ccae3ce43b1",
+    "name": "Mantenimiento de bicicletas",
+    "description": "Revision preventiva",
+    "category": "maintenace",
+    "available": true
+  },
+  {
+    "id": "ca2a74d4-8bf7-4770-af9b-ab24fe462e17",
+    "name": "Mantenimiento de bicicletas",
+    "description": "Revision preventiva",
+    "category": "maintenace",
+    "available": true
+  },
+  {
+    "id": "80ada47b-7576-45f1-8d46-e9d55e4cfad9",
+    "name": "Mantenimiento de bicicletas",
+    "description": "Revision preventiva",
+    "duration": "150 min",
+    "price": 900,
+    "category": "maintenace",
+    "available": true
+  },
+  {
+    "id": "d4c8bd9f-8ea5-4863-a944-cd38ddbc85c3",
+    "name": "Mantenimiento de bicicletas",
+    "description": "Revision preventiva",
+    "duration": "150 min",
+    "price": 1390,
+    "category": "review",
+    "available": true
   }
 ]
