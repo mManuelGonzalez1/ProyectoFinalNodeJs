@@ -7,12 +7,9 @@ class ServiceManager {
   }
   async getServiceById(id) {
     const services = await this.getServices();
-    const result = services.find((service) => service.id === id);
-    if (result) {
-      return result;
-    } else {
-      return "No se encontro el id del servicio buscado, por favor intenta nuevamente";
-    }
+    return (
+      services.find((service) => String(service.id) === String(id)) ?? null
+    );
   }
   async addService(serviceData) {
     const { name, description, duration, price, category, available } =
