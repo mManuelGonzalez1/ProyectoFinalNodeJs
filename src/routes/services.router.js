@@ -62,7 +62,7 @@ router.put("/:sid", async (req, res) => {
     const updatedService = await serviceManager.updateService(sid, req.body);
     res.status(200).json({ status: "success", payload: updatedService });
   } catch (error) {
-    res.status(404).json({ status: "error", message: error.message });
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
 
@@ -76,7 +76,7 @@ router.delete("/:sid", async (req, res) => {
       payload: deletedService,
     });
   } catch (error) {
-    res.status(404).json({ status: "error", message: error.message });
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
 export default router;

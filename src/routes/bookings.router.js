@@ -13,7 +13,7 @@ router.get("/:bid", async (req, res) => {
 
     if (!bookings) {
       return res
-        .status(404)
+        .status(400)
         .json({ status: "error", message: "Servicio Agendado no encontrado" });
     }
     res.status(200).json({ status: "success", payload: bookings });
@@ -25,7 +25,7 @@ router.get("/:bid", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const { clientName, clientEmail, date, time, status } = req.body;
-    if (!clientName) {
+    if (!clientName || !clientEmail || !date || !time) {
       return res.status(400).json({
         status: "error",
         message: "Faltan datos, por favor ingresalos para mostrar la info",
@@ -49,12 +49,12 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/:sid/services/:bid", async (req, res) => {
+router.post("/:bid/services/:sid", async (req, res) => {
   try {
     const { sid, bid } = req.params;
     const serviceExists = await serviceManager.getServiceById(sid);
     if (!serviceExists) {
-      return res.status(404).json({
+      return res.status(400).json({
         status: "error",
         message: `El servicio conel id${sid} no existe`,
       });
