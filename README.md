@@ -2,9 +2,9 @@
 
 ## Descripcion
 
-API REST de Node.js y Express para administrar servicios mediante la clase `ServiceManager`. Los servicios se almacenan de forma persistente en el archivo `src/data/services.json`.
+API REST de Node.js y Express para administrar servicios y reservas. Los datos se almacenan de forma persistente en archivos JSON dentro de `src/data/`.
 
-El proyecto permite consultar, agregar, actualizar y eliminar servicios.
+El proyecto permite consultar, crear, actualizar y eliminar servicios, además de crear reservas, consultarlas por ID y asociarles servicios.
 
 ## Requisitos
 
@@ -89,6 +89,54 @@ Ejemplo de body JSON para crear un servicio (`POST /api/services`):
 Al crear un servicio, la API genera el `id` automaticamente. Usa el ID devuelto para probar `GET`, `PUT` o `DELETE` sobre ese servicio. `PUT` acepta un objeto JSON con los campos a actualizar; no se puede cambiar el ID.
 
 Las respuestas exitosas tienen el estado `200` y un objeto JSON con `status: "success"` y `payload`. Si no se encuentra un servicio por ID, la API responde con `404`.
+
+## API de reservas
+
+Todas las rutas de reservas comienzan con `/api/bookings`.
+
+| Metodo | Ruta | Descripcion |
+| ------ | ---- | ----------- |
+| `GET` | `/api/bookings/:bid` | Obtiene una reserva por ID. |
+| `POST` | `/api/bookings` | Crea una reserva. |
+| `POST` | `/api/bookings/:sid/services/:bid` | Agrega un servicio a una reserva. |
+
+Para crear una reserva, envia un objeto JSON con estos campos:
+
+```json
+{
+  "clientName": "Ana Perez",
+  "clientEmail": "ana@example.com",
+  "date": "2026-10-10",
+  "time": "10:00",
+  "status": "pending"
+}
+```
+
+`status` es opcional en la peticion y toma el valor `pending` si se omite. El ID de la reserva lo genera la API como UUID.
+
+Para asociar un servicio, usa el ID del servicio en `:sid` y el ID de la reserva en `:bid`, en ese orden. Por ejemplo:
+
+```text
+POST http://localhost:8080/api/bookings/ID_DEL_SERVICIO/services/ID_DE_LA_RESERVA
+```
+
+El servicio asociado se guarda en la reserva con una cantidad inicial de `1`. Si se agrega de nuevo, aumenta su cantidad.
+
+## Recurso `bookings`
+
+Las reservas se guardan en `src/data/bookings.json` como un arreglo de objetos. Cada reserva contiene:
+
+| Campo | Tipo | Descripcion |
+| ----- | ---- | ----------- |
+| `id` | `string` | Identificador UUID generado al crear la reserva. |
+| `clientName` | `string` | Nombre del cliente. Es obligatorio. |
+| `clientEmail` | `string` | Correo del cliente. Es obligatorio. |
+| `date` | `string` | Fecha de la reserva. Es obligatoria. |
+| `time` | `string` | Hora de la reserva. Es obligatoria. |
+| `status` | `string` | Estado de la reserva; por defecto es `pending`. |
+| `services` | `array` | Servicios asociados, cada uno con `service` (ID) y `quantity`. |
+
+## Recurso `services`
 
 ## Recurso `services`
 
@@ -245,10 +293,13 @@ src/
   config/
     env.config.js
   data/
+    bookings.json
     services.json
   managers/
+    bookingManager.js
     serviceManager.js
   routes/
+    bookings.router.js
     services.router.js
 package.json
 README.md
