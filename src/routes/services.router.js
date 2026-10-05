@@ -1,82 +1,22 @@
 import { Router } from "express";
-import ServiceManager from "../managers/serviceManager.js";
+import {
+  getAllServices,
+  getServiceId,
+  createService,
+  updateServices,
+  removeService,
+} from "../controllers/services.controllers.js";
 
 const router = Router();
-const serviceManager = new ServiceManager("./src/data/services.json");
 
-router.get("/", async (req, res) => {
-  try {
-    const { category, available } = req.query;
-    let services = await serviceManager.getServices();
+router.get("/", getAllServices);
 
-    if (category) {
-      services = services.filter((service) => service.category === category);
-    }
+router.get("/:sid", getServiceId);
 
-    if (available !== undefined) {
-      const requestedAvailability = available === "true";
-      services = services.filter(
-        (service) => service.available === requestedAvailability,
-      );
-    }
+router.post("/", createService);
 
-    res.status(200).json({ status: "success", payload: services });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
-  }
-});
+router.put("/:sid", updateServices);
 
-router.get("/:sid", async (req, res) => {
-  try {
-    const { sid } = req.params;
-    const service = await serviceManager.getServiceById(sid);
+router.delete("/:sid", removeService);
 
-    if (!service) {
-      return res
-        .status(404)
-        .json({ status: "error", message: "Servicio no encontrado" });
-    }
-
-    res.status(200).json({ status: "success", payload: service });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
-  }
-});
-
-router.post("/", async (req, res) => {
-  try {
-    const newService = await serviceManager.addService(req.body);
-    res.status(200).json({
-      status: "success",
-      payload: newService,
-      message: "Servicio creado con exito",
-    });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
-  }
-});
-
-router.put("/:sid", async (req, res) => {
-  try {
-    const { sid } = req.params;
-    const updatedService = await serviceManager.updateService(sid, req.body);
-    res.status(200).json({ status: "success", payload: updatedService });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
-  }
-});
-
-router.delete("/:sid", async (req, res) => {
-  try {
-    const { sid } = req.params;
-    const deletedService = await serviceManager.deleteService(sid);
-    res.status(200).json({
-      status: "success",
-      message: "Servicio eliminado con exito",
-      payload: deletedService,
-    });
-  } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
-  }
-});
 export default router;

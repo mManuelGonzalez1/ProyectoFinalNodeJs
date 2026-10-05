@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import crypto from "crypto";
 
-class ServiceManager {
+export class ServiceManager {
   constructor(path = "./src/data/services.json") {
     this.path = path;
   }
