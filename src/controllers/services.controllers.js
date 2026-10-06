@@ -1,5 +1,5 @@
 import ServiceManager from "../managers/serviceManager.js";
-const serviceManager = new ServiceManager();
+const serviceManager = new ServiceManager('../src/data/services.json');
 
 export const getAllServices = async (req, res) => {
   try {
