@@ -1,8 +1,8 @@
 import BookingManager from "../managers/bookingManager.js";
 import ServiceManager from "../managers/serviceManager.js";
 
-const bookingManager = new BookingManager('../src/data/bookings.json');
-const serviceManager = new ServiceManager('../src/data/services.json');
+const bookingManager = new BookingManager();
+const serviceManager = new ServiceManager();
 
 export const getBookingsById = async (req, res) => {
   try {
