@@ -6,7 +6,7 @@ const PATH = "./data/services.json";
 export class ServiceDao {
   async #readFile() {
     try {
-      const data = await fs.readFile(this.path, "utf-8");
+      const data = await fs.readFile(PATH, "utf-8");
       return JSON.parse(data);
     } catch (e) {
       return [];
@@ -14,19 +14,19 @@ export class ServiceDao {
   }
 
   async #writeFile(data) {
-    await fs.writeFile(this.path, JSON.stringify(data, null, 2));
+    await fs.writeFile(PATH, JSON.stringify(data, null, 2));
   }
-  async addService(serviceData) {
+  async createService(serviceData) {
     const services = await this.#readFile();
     const newService = {
       id: crypto.randomUUID(),
       ...serviceData,
     };
     services.push(newService);
-    await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
+    await this.#writeFile(services);
     return newService;
   }
-  async getServiceById(id) {
+  async getById(id) {
     const services = await this.#readFile();
     return (
       services.find((service) => String(service.id) === String(id)) ?? null
@@ -34,30 +34,31 @@ export class ServiceDao {
   }
   async getAll() {
     try {
-      const data = await fs.readFile(this.path, "utf-8");
+      const data = await this.#readFile();
       return JSON.parse(data);
     } catch (error) {
       return [];
     }
   }
-  async updateService(id, updatedData) {
+  async update(id, updatedData) {
     const services = await this.#readFile();
+    const posicion = services.findIndex((value) => value.id == id);
     const updatedService = {
       ...services[posicion],
       ...updatedData,
       id,
     };
     services[posicion] = updatedService;
-    await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
+    await this.#writeFile(services);
     return updatedService;
   }
-  async deleteService(id) {
+  async delete(id) {
     const services = await this.#readFile();
     const posicion = services.findIndex((value) => value.id == id);
     console.log(posicion);
     if (posicion != -1) {
       services.splice(posicion, 1);
-      await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");
+      await this.#writeFile(services);
       return services;
     } else {
       throw new Error(
