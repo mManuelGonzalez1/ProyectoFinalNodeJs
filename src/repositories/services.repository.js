@@ -1,6 +1,8 @@
 import { ServiceDao } from "../dao/services.dao.js";
-const serviceDao = new ServiceDao();
-export class ServicesRepository(){
+export class ServicesRepository {
+    constructor() {
+    this.dao = new ServiceDao();
+  }
     async addService(serviceData){
      const serviceCreated= await serviceDao.createService(serviceData);
      return serviceCreated   
