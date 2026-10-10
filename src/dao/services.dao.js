@@ -1,7 +1,6 @@
 import fs from "fs/promises";
-import crypto from "crypto";
 
-const PATH = "./data/services.json";
+const PATH = "../proyectoFinalNodeJS/src/data/services.json";
 
 export class ServiceDao {
   async #readFile() {
@@ -32,12 +31,7 @@ export class ServiceDao {
     );
   }
   async getAll() {
-    try {
-      const data = await this.#readFile();
-      return JSON.parse(data);
-    } catch (error) {
-      return [];
-    }
+    return this.#readFile();
   }
   async update(id, updatedData) {
     const services = await this.#readFile();

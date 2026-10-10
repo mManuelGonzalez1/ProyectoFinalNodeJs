@@ -1,12 +1,12 @@
 import ServiceManager from "../managers/serviceManager.js";
-import ServicesService from "../services/ServiceService.js"
+import ServicesService from "../services/ServiceService.js";
 const servicesService = new ServicesService();
 const serviceManager = new ServiceManager();
 
 export const getAllServices = async (req, res) => {
   try {
     const { category, available } = req.query;
-    let services = await serviceManager.getServices();
+    let services = await servicesService.getServices();
 
     if (category) {
       services = services.filter((service) => service.category === category);
@@ -30,7 +30,7 @@ export const getAllServices = async (req, res) => {
 export const getServiceId = async (req, res) => {
   try {
     const { sid } = req.params;
-    const service = await serviceManager.getServiceById(sid);
+    const service = await servicesService.getById(sid);
 
     if (!service) {
       return res
