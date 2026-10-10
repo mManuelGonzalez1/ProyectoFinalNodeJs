@@ -1,4 +1,6 @@
 import ServiceManager from "../managers/serviceManager.js";
+import ServicesService from "../services/ServiceService.js"
+const servicesService = new ServicesService();
 const serviceManager = new ServiceManager();
 
 export const getAllServices = async (req, res) => {
@@ -43,14 +45,14 @@ export const getServiceId = async (req, res) => {
 };
 export const createService = async (req, res) => {
   try {
-    const newService = await serviceManager.addService(req.body);
+    const newService = await servicesService.addService(req.body); //serviceManager.addService(req.body);
     res.status(200).json({
       status: "success",
       payload: newService,
       message: "Servicio creado con exito",
     });
   } catch (e) {
-    res.status(500).json({ status: "error", message: error.message });
+    res.status(500).json({ status: "error", message: e.message });
   }
 };
 

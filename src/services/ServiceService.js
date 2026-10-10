@@ -24,3 +24,4 @@ export class ServicesService{
   }
 }
 
+export default ServicesService;
