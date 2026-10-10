@@ -19,7 +19,6 @@ export class ServiceDao {
   async createService(serviceData) {
     const services = await this.#readFile();
     const newService = {
-      id: crypto.randomUUID(),
       ...serviceData,
     };
     services.push(newService);
@@ -43,6 +42,11 @@ export class ServiceDao {
   async update(id, updatedData) {
     const services = await this.#readFile();
     const posicion = services.findIndex((value) => value.id == id);
+    if (posicion === -1) {
+      throw new Error(
+        "No encontramos el servicio, no podemos actualizarlo, por favor intenta de nuevo",
+      );
+    }
     const updatedService = {
       ...services[posicion],
       ...updatedData,
@@ -67,3 +71,4 @@ export class ServiceDao {
     }
   }
 }
+export default ServiceDao;
