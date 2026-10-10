@@ -30,6 +30,6 @@ export  async function addService(serviceData) {
       category,
       available,
     };
-    const services = serviceDao.createService(newService); 
+    const services = await serviceDao.createService(newService); 
     return services;
   }
