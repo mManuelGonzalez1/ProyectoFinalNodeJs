@@ -36,11 +36,6 @@ export class ServiceDao {
   async update(id, updatedData) {
     const services = await this.#readFile();
     const posicion = services.findIndex((value) => value.id == id);
-    if (posicion === -1) {
-      throw new Error(
-        "No encontramos el servicio, no podemos actualizarlo, por favor intenta de nuevo",
-      );
-    }
     const updatedService = {
       ...services[posicion],
       ...updatedData,
@@ -53,16 +48,9 @@ export class ServiceDao {
   async delete(id) {
     const services = await this.#readFile();
     const posicion = services.findIndex((value) => value.id == id);
-    console.log(posicion);
-    if (posicion != -1) {
-      services.splice(posicion, 1);
-      await this.#writeFile(services);
-      return services;
-    } else {
-      throw new Error(
-        "No se encontro el id solicitdo, por favor intentalo nuevamente",
-      );
-    }
+    services.splice(posicion, 1);
+    await this.#writeFile(services);
+    return services;
   }
 }
 export default ServiceDao;

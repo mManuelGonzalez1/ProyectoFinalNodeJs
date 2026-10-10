@@ -59,7 +59,7 @@ export const createService = async (req, res) => {
 export const updateServices = async (req, res) => {
   try {
     const { sid } = req.params;
-    const updatedService = await serviceManager.updateService(sid, req.body);
+    const updatedService = await servicesService.updateService(sid, req.body);
     res.status(200).json({ status: "success", payload: updatedService });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });

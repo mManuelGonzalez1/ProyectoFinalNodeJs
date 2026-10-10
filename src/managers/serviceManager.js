@@ -70,7 +70,6 @@ export class ServiceManager {
   async deleteService(id) {
     const services = await this.getServices();
     const posicion = services.findIndex((value) => value.id == id);
-    console.log(posicion);
     if (posicion != -1) {
       services.splice(posicion, 1);
       await fs.writeFile(this.path, JSON.stringify(services, null, 2), "utf-8");

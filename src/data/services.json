@@ -1,14 +1,5 @@
 [
   {
-    "id": 2,
-    "name": "Mantenimiento de aviones",
-    "description": "Revision preventiva de motores",
-    "duration": "400 min",
-    "price": 390,
-    "category": "Maintenance",
-    "available": true
-  },
-  {
     "id": "6be3f66d-2525-4dfc-8172-3f2625e41746",
     "name": "Mantenimiento de bicicletas",
     "description": "Revision preventiva",

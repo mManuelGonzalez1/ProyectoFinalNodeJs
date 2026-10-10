@@ -13,6 +13,12 @@ export class ServicesRepository {
   async getById(id) {
     return await this.dao.getById(id);
   }
+  async update(updatedData) {
+    return await this.dao.update(updatedData);
+  }
+  async delete(id) {
+    return await this.dao.delete(id);
+  }
 }
 
 export default ServicesRepository;
