@@ -20,6 +20,16 @@ export addService(serviceData) {
     ) {
       throw new Error("Por favor completa todos los campos");
     }
+    let newService = {
+      id: crypto.randomUUID(),
+      name,
+      description,
+      duration,
+      price,
+      category,
+      available,
+    };
+    newService=serviceData;
     const services = ServiceDao.createService(serviceData); 
     return services;
   }
