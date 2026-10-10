@@ -5,20 +5,7 @@ const serviceDao = new ServiceDao();
 export  async function addService(serviceData) {
     const { name, description, duration, price, category, available } =
       serviceData;
-    if (
-      name === undefined ||
-      name === "" ||
-      description === undefined ||
-      description === "" ||
-      duration === undefined ||
-      duration === "" ||
-      price === undefined ||
-      price === "" ||
-      category === undefined ||
-      category === "" ||
-      available === undefined ||
-      available === ""
-    ) {
+    if (!name||!description||!duration||!price||!category||!available) {
       throw new Error("Por favor completa todos los campos");
     }
     const newService = {
