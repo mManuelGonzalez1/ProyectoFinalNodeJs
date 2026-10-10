@@ -1,7 +1,8 @@
 import ServiceDao from "../dao/services.dao.js";
+import crypto from "crypto";
 const serviceDao = new ServiceDao();
 
-export addService(serviceData) {
+export  async function addService(serviceData) {
     const { name, description, duration, price, category, available } =
       serviceData;
     if (
@@ -20,7 +21,7 @@ export addService(serviceData) {
     ) {
       throw new Error("Por favor completa todos los campos");
     }
-    let newService = {
+    const newService = {
       id: crypto.randomUUID(),
       name,
       description,
@@ -29,7 +30,6 @@ export addService(serviceData) {
       category,
       available,
     };
-    newService=serviceData;
-    const services = ServiceDao.createService(serviceData); 
+    const services = serviceDao.createService(newService); 
     return services;
   }
