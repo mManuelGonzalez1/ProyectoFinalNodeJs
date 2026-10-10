@@ -5,8 +5,7 @@ export class ServicesRepository {
     this.dao = new ServiceDao();
   }
     async addService(serviceData){
-     const serviceCreated= await this.dao.createService(serviceData);
-     return serviceCreated   
+     return await this.dao.createService(serviceData);   
     }
 }
 
