@@ -1,7 +1,5 @@
-import ServiceManager from "../managers/serviceManager.js";
 import ServicesService from "../services/ServiceService.js";
 const servicesService = new ServicesService();
-const serviceManager = new ServiceManager();
 
 export const getAllServices = async (req, res) => {
   try {
