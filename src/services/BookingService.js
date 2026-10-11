@@ -25,5 +25,25 @@ export class BookingService {
   async getBookingById(id) {
     return this.repository.getById(id);
   }
+  async addServiceToBooking(bid, sid) {
+    const booking = await this.repository.getById(bid);
+
+    if (!booking) {
+      throw new Error(`La reserva con id ${bid} no se encuentra`);
+    }
+
+    booking.services ??= [];
+    const serviceIndex = booking.services.findIndex(
+      (item) => String(item.service) === String(sid),
+    );
+
+    if (serviceIndex !== -1) {
+      booking.services[serviceIndex].quantity += 1;
+    } else {
+      booking.services.push({ service: sid, quantity: 1 });
+    }
+    await this.repository.addServiceToBooking(booking);
+    return booking;
+  }
 }
 export default BookingService;

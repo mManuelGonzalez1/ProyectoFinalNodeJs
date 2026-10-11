@@ -1,8 +1,6 @@
-import BookingManager from "../managers/bookingManager.js";
-import ServiceManager from "../managers/serviceManager.js";
 import BookingService from "../services/BookingService.js";
-const bookingManager = new BookingManager();
-const serviceManager = new ServiceManager();
+import ServicesService from "../services/ServiceService.js";
+const servicesService = new ServicesService();
 const bookingService = new BookingService();
 
 export const getBookingsById = async (req, res) => {
@@ -51,14 +49,14 @@ export const createBooking = async (req, res) => {
 export const addServiceToBooking = async (req, res) => {
   try {
     const { sid, bid } = req.params;
-    const serviceExists = await serviceManager.getServiceById(sid);
+    const serviceExists = await servicesService.getById(sid);
     if (!serviceExists) {
       return res.status(400).json({
         status: "error",
-        message: `El servicio conel id${sid} no existe`,
+        message: `El servicio con el id${sid} no existe`,
       });
     }
-    const updatedBooking = await bookingManager.addServiceToBooking(bid, sid);
+    const updatedBooking = await bookingService.addServiceToBooking(bid, sid);
     res.status(200).json({ status: "success", payload: updatedBooking });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });

@@ -10,6 +10,10 @@
       {
         "service": "2",
         "quantity": 3
+      },
+      {
+        "service": "c6c56ad4-bb31-4923-b579-8a8f1e2387cb",
+        "quantity": 1
       }
     ]
   },
@@ -33,6 +37,15 @@
     "clientEmail": "manuelg1234456@gmail.com",
     "date": "11/19/2026",
     "time": "03:45pm",
+    "status": "pending",
+    "services": []
+  },
+  {
+    "id": "61d2b63b-39d4-42b8-b12c-5f3eade52dd2",
+    "clientName": "Andres Felipe Garzon",
+    "clientEmail": "manuelg1234456@gmail.com",
+    "date": "11/09/2026",
+    "time": "11:45pm",
     "status": "pending",
     "services": []
   }

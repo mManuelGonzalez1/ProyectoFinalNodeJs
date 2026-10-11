@@ -24,5 +24,14 @@ export class BookingDao {
     const bookings = await this.#readFile();
     return bookings.find((book) => String(book.id) === String(id)) ?? null;
   }
+  async addServiceToBooking(bookingData) {
+    const bookings = await this.#readFile();
+    const indice = bookings.findIndex((valor) => valor.id === bookingData.id);
+    if (indice !== -1) {
+      bookings[indice] = bookingData;
+    }
+    await this.#writeFile(bookings);
+    return bookingData;
+  }
 }
 export default BookingDao;
