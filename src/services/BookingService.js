@@ -7,7 +7,13 @@ export class BookingService {
   }
   async createBooking(BookingData) {
     const { clientName, clientEmail, date, time, status } = BookingData;
-    if (!clientName || !clientEmail || !date || !time || !status) {
+    if (
+      !BookingData.clientName ||
+      !BookingData.clientEmail ||
+      !BookingData.date ||
+      !BookingData.time ||
+      !BookingData.status
+    ) {
       throw new Error("Por favor completa todos los campos");
     }
     const services = [];

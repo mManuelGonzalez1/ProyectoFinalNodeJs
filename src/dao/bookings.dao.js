@@ -1,37 +1,16 @@
-import fs from "fs/promises";
-const PATH = "../proyectoFinalNodeJS/src/data/bookings.json";
+import { BookingModel } from "../dao/models/bookings.model.js";
 
 export class BookingDao {
-  async #readFile() {
-    try {
-      const data = await fs.readFile(PATH, "utf-8");
-      return JSON.parse(data);
-    } catch (e) {
-      return [];
-    }
-  }
-
-  async #writeFile(data) {
-    await fs.writeFile(PATH, JSON.stringify(data, null, 2));
-  }
   async create(bookingData) {
-    const bookings = await this.#readFile();
-    bookings.push(bookingData);
-    await this.#writeFile(bookings);
-    return bookingData;
+    return await BookingModel.create(bookingData);
   }
   async getBookingById(id) {
-    const bookings = await this.#readFile();
-    return bookings.find((book) => String(book.id) === String(id)) ?? null;
+    return await BookingModel.findById(id);
   }
-  async addServiceToBooking(bookingData) {
-    const bookings = await this.#readFile();
-    const indice = bookings.findIndex((valor) => valor.id === bookingData.id);
-    if (indice !== -1) {
-      bookings[indice] = bookingData;
-    }
-    await this.#writeFile(bookings);
-    return bookingData;
+  async addServiceToBooking(bookingData, id) {
+    return await BookingModel.findByIdAndUpdate(id, {
+      $push: { services: bookingData.services },
+    });
   }
 }
 export default BookingDao;

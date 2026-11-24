@@ -42,7 +42,7 @@ export const createBooking = async (req, res) => {
       message: "Cita Agendada con exito",
     });
   } catch (e) {
-    res.status(500).json({ status: "error", message: error.message });
+    res.status(500).json({ status: "error", message: e.message });
   }
 };
 
