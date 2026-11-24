@@ -1,55 +1,23 @@
-import fs from "fs/promises";
-const PATH = "../proyectoFinalNodeJS/src/data/services.json";
+import { ServiceModel } from "../dao/models/service.model.js";
 
 export class ServiceDao {
-  async #readFile() {
-    try {
-      const data = await fs.readFile(PATH, "utf-8");
-      return JSON.parse(data);
-    } catch (e) {
-      return [];
-    }
-  }
-
-  async #writeFile(data) {
-    await fs.writeFile(PATH, JSON.stringify(data, null, 2));
-  }
   async createService(serviceData) {
-    const services = await this.#readFile();
-    const newService = {
-      ...serviceData,
-    };
-    services.push(newService);
-    await this.#writeFile(services);
-    return newService;
+    return await ServiceModel.create(serviceData);
   }
   async getById(id) {
-    const services = await this.#readFile();
-    return (
-      services.find((service) => String(service.id) === String(id)) ?? null
-    );
+    return await ServiceModel.findById(id);
   }
   async getAll() {
-    return this.#readFile();
+    return await ServiceModel.find();
   }
   async update(id, updatedData) {
-    const services = await this.#readFile();
-    const posicion = services.findIndex((value) => value.id == id);
-    const updatedService = {
-      ...services[posicion],
-      ...updatedData,
-      id,
-    };
-    services[posicion] = updatedService;
-    await this.#writeFile(services);
-    return updatedService;
+    return await ServiceModel.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
   }
   async delete(id) {
-    const services = await this.#readFile();
-    const posicion = services.findIndex((value) => value.id == id);
-    services.splice(posicion, 1);
-    await this.#writeFile(services);
-    return services;
+    return await ServiceModel.findByIdAndDelete(id);
   }
 }
 export default ServiceDao;

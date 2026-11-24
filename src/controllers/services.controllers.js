@@ -67,7 +67,7 @@ export const updateServices = async (req, res) => {
 export const removeService = async (req, res) => {
   try {
     const { sid } = req.params;
-    const deletedService = serviceManager.deleteService(sid);
+    const deletedService = await servicesService.deleteService(sid);
     res.status(200).json({
       status: "success",
       message: "Servicio eliminado con exito",

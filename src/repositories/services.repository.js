@@ -13,8 +13,8 @@ export class ServicesRepository {
   async getById(id) {
     return await this.dao.getById(id);
   }
-  async update(updatedData) {
-    return await this.dao.update(updatedData);
+  async update(id, updatedData) {
+    return await this.dao.update(id, updatedData);
   }
   async delete(id) {
     return await this.dao.delete(id);

@@ -9,12 +9,12 @@ export class ServicesService {
     const { name, description, duration, price, category, available } =
       serviceData;
     if (
-      !name ||
-      !description ||
-      !duration ||
-      !price ||
-      !category ||
-      !available
+      !serviceData.name ||
+      !serviceData.description ||
+      !serviceData.duration ||
+      !serviceData.price ||
+      !serviceData.category ||
+      !serviceData.available
     ) {
       throw new Error("Por favor completa todos los campos");
     }
@@ -59,13 +59,10 @@ export class ServicesService {
       ) {
         throw new Error("El id no se puede cambiar");
       }
-      const updatedService = {
-        ...services[posicion],
-        ...updatedData,
-        id,
-      };
-      services[posicion] = updatedService;
-      return this.repository.update(updatedService);
+      const serviceUpdates = { ...updatedData };
+      delete serviceUpdates.id;
+      delete serviceUpdates._id;
+      return await this.repository.update(id, serviceUpdates);
     } catch (error) {
       return error.message;
     }
