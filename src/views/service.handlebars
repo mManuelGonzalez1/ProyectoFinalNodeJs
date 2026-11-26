@@ -1,0 +1,49 @@
+<main class="services-page">
+  <header class="services-header">
+    <p class="services-eyebrow">Detalle del servicio</p>
+    <h1 class="services-title">{{title}}</h1>
+    {{#if service}}
+      <p class="services-description">
+        Consulta la información de este servicio.
+      </p>
+    {{else}}
+      <p class="services-description">
+        {{#if message}}
+          {{message}}
+        {{else}}
+          No encontramos el servicio solicitado.
+        {{/if}}
+      </p>
+    {{/if}}
+  </header>
+
+  {{#if service}}
+    <article class="service-card">
+      <div class="service-card__top">
+        <span class="service-category">{{service.category}}</span>
+        <span class="service-availability{{#unless service.available}} service-availability--unavailable{{/unless}}">
+          {{#if service.available}}Disponible{{else}}No disponible{{/if}}
+        </span>
+      </div>
+
+      <h2 class="service-card__title">{{service.name}}</h2>
+      <p class="service-card__description">{{service.description}}</p>
+
+      <div class="service-card__details">
+        <span class="service-card__detail">
+          Duración: {{service.duration}} min
+        </span>
+      </div>
+
+      <footer class="service-card__footer">
+        <p class="service-price">
+          <span class="service-price__label">Precio</span>
+          {{service.price}}
+        </p>
+        <a class="service-card__button" href="/services">Volver a servicios</a>
+      </footer>
+    </article>
+  {{else}}
+    <a class="service-card__button" href="/services">Volver a servicios</a>
+  {{/if}}
+</main>

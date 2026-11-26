@@ -1,0 +1,22 @@
+<main class="booking-page">
+  <header class="booking-header">
+    <p class="booking-eyebrow">Reserva confirmada</p>
+    <h1 class="booking-title">{{title}}</h1>
+    <p class="booking-description">Tu cita fue agendada correctamente.</p>
+  </header>
+
+  <section class="booking-details" aria-label="Detalles de la reserva">
+    <p><strong>Cliente:</strong> {{booking.clientName}}</p>
+    <p><strong>Correo:</strong> {{booking.clientEmail}}</p>
+    <p><strong>Fecha:</strong> {{booking.date}}</p>
+    <p><strong>Hora:</strong> {{booking.time}}</p>
+    <p><strong>Estado:</strong> {{booking.status}}</p>
+    <p><strong>Código de reserva:</strong> {{booking._id}}</p>
+    {{#each booking.services}}
+      <p><strong>ID del servicio:</strong> {{service}}</p>
+      <p><strong>Cantidad:</strong> {{quantity}}</p>
+    {{/each}}
+  </section>
+
+  <a class="booking-button" href="/bookings">Agendar otra cita</a>
+</main>

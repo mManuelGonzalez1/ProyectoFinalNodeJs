@@ -21,7 +21,7 @@ export const getAllServices = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ status: "error", message: `Error al obtener los servicios` });
+      .json({ status: "error", message: error.message });
   }
 };
 
@@ -38,19 +38,24 @@ export const getServiceId = async (req, res) => {
 
     res.status(200).json({ status: "success", payload: service });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    const statusCode =
+      error.name === "CastError" ? 400 : error.statusCode || 500;
+    res.status(statusCode).json({ status: "error", message: error.message });
   }
 };
 export const createService = async (req, res) => {
   try {
     const newService = await servicesService.addService(req.body); //serviceManager.addService(req.body);
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       payload: newService,
       message: "Servicio creado con exito",
     });
   } catch (e) {
-    res.status(500).json({ status: "error", message: e.message });
+    const statusCode =
+      e.statusCode ||
+      (e.name === "ValidationError" || e.name === "CastError" ? 400 : 500);
+    res.status(statusCode).json({ status: "error", message: e.message });
   }
 };
 
@@ -60,7 +65,12 @@ export const updateServices = async (req, res) => {
     const updatedService = await servicesService.updateService(sid, req.body);
     res.status(200).json({ status: "success", payload: updatedService });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    const statusCode =
+      error.statusCode ||
+      (error.name === "CastError" || error.name === "ValidationError"
+        ? 400
+        : 500);
+    res.status(statusCode).json({ status: "error", message: error.message });
   }
 };
 
@@ -74,6 +84,8 @@ export const removeService = async (req, res) => {
       payload: deletedService,
     });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    const statusCode =
+      error.statusCode || (error.name === "CastError" ? 400 : 500);
+    res.status(statusCode).json({ status: "error", message: error.message });
   }
 };

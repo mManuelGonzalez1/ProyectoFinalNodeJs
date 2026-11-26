@@ -1,0 +1,57 @@
+<main class="booking-page">
+  <header class="booking-header">
+    <p class="booking-eyebrow">Reserva tu cita</p>
+    <h1 class="booking-title">{{title}}</h1>
+    <p class="booking-description">Completa tus datos para agendar.</p>
+  </header>
+
+  {{#if error}}
+    <p class="booking-error" role="alert">{{error}}</p>
+  {{/if}}
+
+  <form class="booking-form" action="/bookings" method="post">
+    <label for="clientName">Nombre</label>
+    <input
+      id="clientName"
+      name="clientName"
+      type="text"
+      value="{{values.clientName}}"
+      required
+    />
+
+    <label for="clientEmail">Correo electrónico</label>
+    <input
+      id="clientEmail"
+      name="clientEmail"
+      type="email"
+      value="{{values.clientEmail}}"
+      required
+    />
+
+    <label for="date">Fecha</label>
+    <input id="date" name="date" type="date" value="{{values.date}}" required />
+
+    <label for="time">Hora</label>
+    <input id="time" name="time" type="time" value="{{values.time}}" required />
+
+    <label for="status">Estado</label>
+    <input
+      id="status"
+      name="status"
+      type="text"
+      value="{{values.status}}"
+      required
+    />
+
+    <label for="serviceId">ID del servicio</label>
+    <input
+      id="serviceId"
+      name="serviceId"
+      type="text"
+      value="{{values.serviceId}}"
+      required
+    />
+
+    <button class="booking-button" type="submit">Agendar cita</button>
+  </form>
+</main>

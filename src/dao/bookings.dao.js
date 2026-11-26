@@ -7,10 +7,8 @@ export class BookingDao {
   async getBookingById(id) {
     return await BookingModel.findById(id);
   }
-  async addServiceToBooking(bookingData, id) {
-    return await BookingModel.findByIdAndUpdate(id, {
-      $push: { services: bookingData.services },
-    });
+  async addServiceToBooking(bookingData) {
+    return await bookingData.save();
   }
 }
 export default BookingDao;

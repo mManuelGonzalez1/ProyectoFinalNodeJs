@@ -1,0 +1,196 @@
+<main class="services-page">
+  <header class="services-header">
+    <p class="services-eyebrow">Atención a tu medida</p>
+    <h1 class="services-title">{{title}}</h1>
+    <p class="services-description">
+      Explora nuestros servicios y encuentra la opción ideal para ti.
+    </p>
+  </header>
+
+  <section aria-label="Catálogo de servicios">
+    <div class="services-toolbar">
+      <p class="services-count">
+        Total de servicios: {{services.length}}
+      </p>
+    </div>
+
+    {{#if services.length}}
+      <div class="services-grid">
+        {{#each services}}
+          <article class="service-card">
+            <div class="service-card__top">
+              <span class="service-category">{{category}}</span>
+              <span class="service-availability{{#unless available}} service-availability--unavailable{{/unless}}">
+                {{#if available}}Disponible{{else}}No disponible{{/if}}
+              </span>
+            </div>
+
+            <h2 class="service-card__title">{{name}}</h2>
+            <p class="service-card__description">{{description}}</p>
+
+            <div class="service-card__details">
+              <span class="service-card__detail">
+                Duración: {{duration}} min
+              </span>
+            </div>
+
+            <footer class="service-card__footer">
+              <p class="service-price">
+                <span class="service-price__label">Precio</span>
+                {{price}}
+              </p>
+              <a class="service-card__button" href="/services/{{_id}}">
+                Ver detalles
+              </a>
+            </footer>
+          </article>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="services-empty">
+        <h2 class="services-empty__title">Aún no hay servicios disponibles</h2>
+        <p>Vuelve pronto para conocer nuestras opciones.</p>
+      </div>
+    {{/if}}
+  </section>
+
+  <section class="services-live" aria-labelledby="services-live-title">
+    <header class="services-header">
+      <p class="services-eyebrow">Actualización en vivo</p>
+      <h2 class="services-title" id="services-live-title">Servicios con Socket.IO</h2>
+      <p class="services-description">
+        Esta lista se actualiza automáticamente cuando cambian los servicios.
+      </p>
+    </header>
+
+    <p
+      class="services-live__status"
+      id="socket-services-status"
+      role="status"
+      aria-live="polite"
+      data-state="connecting"
+    >Conectando con el servidor...</p>
+
+    <div
+      class="services-grid"
+      id="socket-services-grid"
+      aria-live="polite"
+    ></div>
+
+    <div class="services-empty" id="socket-services-empty" hidden>
+      <h3 class="services-empty__title">No hay servicios para mostrar</h3>
+      <p>Cuando se agreguen servicios, aparecerán aquí automáticamente.</p>
+    </div>
+  </section>
+</main>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const socketServicesGrid = document.getElementById("socket-services-grid");
+  const socketServicesEmpty = document.getElementById("socket-services-empty");
+  const socketServicesStatus = document.getElementById("socket-services-status");
+
+  const createSocketText = (tagName, className, text) => {
+    const element = document.createElement(tagName);
+    element.className = className;
+    element.textContent = text ?? "";
+    return element;
+  };
+
+  const createSocketServiceCard = (service) => {
+    const card = document.createElement("article");
+    card.className = "service-card";
+
+    const top = document.createElement("div");
+    top.className = "service-card__top";
+    top.append(
+      createSocketText("span", "service-category", service.category),
+    );
+
+    const availabilityClass = service.available
+      ? "service-availability"
+      : "service-availability service-availability--unavailable";
+    top.append(
+      createSocketText(
+        "span",
+        availabilityClass,
+        service.available ? "Disponible" : "No disponible",
+      ),
+    );
+    card.append(top);
+
+    card.append(
+      createSocketText("h3", "service-card__title", service.name),
+      createSocketText(
+        "p",
+        "service-card__description",
+        service.description,
+      ),
+    );
+
+    const details = document.createElement("div");
+    details.className = "service-card__details";
+    details.append(
+      createSocketText(
+        "span",
+        "service-card__detail",
+        `Duración: ${service.duration} min`,
+      ),
+    );
+    card.append(details);
+
+    const footer = document.createElement("footer");
+    footer.className = "service-card__footer";
+    const price = createSocketText("p", "service-price", "");
+    price.append(
+      createSocketText("span", "service-price__label", "Precio"),
+      document.createTextNode(String(service.price ?? "")),
+    );
+    footer.append(price);
+    const detailsLink = document.createElement("a");
+    detailsLink.className = "service-card__button";
+    detailsLink.href = `/services/${encodeURIComponent(service._id)}`;
+    detailsLink.textContent = "Ver detalles";
+    footer.append(detailsLink);
+    card.append(footer);
+
+    return card;
+  };
+
+  socket.on("connect", () => {
+    socketServicesStatus.textContent = "Conectado. Sincronizando servicios...";
+    socketServicesStatus.dataset.state = "connected";
+  });
+
+  socket.on("services__updated", (services) => {
+    if (!Array.isArray(services)) {
+      console.error("La actualización recibida de servicios no es válida.");
+      return;
+    }
+
+    socketServicesGrid.replaceChildren(...services.map(createSocketServiceCard));
+    socketServicesEmpty.hidden = services.length > 0;
+    socketServicesStatus.textContent = "Servicios actualizados en tiempo real.";
+    socketServicesStatus.dataset.state = "connected";
+  });
+
+  socket.on("services__error", (error) => {
+    console.error("Error al actualizar los servicios:", error.message);
+    socketServicesStatus.textContent =
+      "No se pudieron actualizar los servicios en tiempo real.";
+    socketServicesStatus.dataset.state = "error";
+  });
+
+  socket.on("connect_error", (error) => {
+    console.error("No se pudo conectar con Socket.IO:", error);
+    socketServicesStatus.textContent =
+      "No se pudo conectar con el servidor en tiempo real.";
+    socketServicesStatus.dataset.state = "error";
+  });
+
+  socket.on("disconnect", () => {
+    socketServicesStatus.textContent = "Conexión en tiempo real interrumpida.";
+    socketServicesStatus.dataset.state = "error";
+  });
+</script>

@@ -1,0 +1,13 @@
+<main class="booking-page">
+  <header class="booking-header">
+    <h1 class="booking-title">{{title}}</h1>
+    <p class="booking-description">
+      {{#if message}}
+        {{message}}
+      {{else}}
+        Verifica el código e inténtalo nuevamente.
+      {{/if}}
+    </p>
+  </header>
+  <a class="booking-button" href="/bookings">Agendar una cita</a>
+</main>

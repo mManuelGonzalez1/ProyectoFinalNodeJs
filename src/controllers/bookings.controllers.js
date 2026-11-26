@@ -10,12 +10,14 @@ export const getBookingsById = async (req, res) => {
 
     if (!bookings) {
       return res
-        .status(400)
+        .status(404)
         .json({ status: "error", message: "Servicio Agendado no encontrado" });
     }
     res.status(200).json({ status: "success", payload: bookings });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    const statusCode =
+      error.statusCode || (error.name === "CastError" ? 400 : 500);
+    res.status(statusCode).json({ status: "error", message: error.message });
   }
 };
 
@@ -36,13 +38,16 @@ export const createBooking = async (req, res) => {
       time,
       status: status || "pending",
     });
-    res.status(200).json({
+    res.status(201).json({
       status: "success",
       payload: newBooking,
       message: "Cita Agendada con exito",
     });
   } catch (e) {
-    res.status(500).json({ status: "error", message: e.message });
+    const statusCode =
+      e.statusCode ||
+      (e.name === "ValidationError" || e.name === "CastError" ? 400 : 500);
+    res.status(statusCode).json({ status: "error", message: e.message });
   }
 };
 
@@ -51,14 +56,19 @@ export const addServiceToBooking = async (req, res) => {
     const { sid, bid } = req.params;
     const serviceExists = await servicesService.getById(sid);
     if (!serviceExists) {
-      return res.status(400).json({
+      return res.status(404).json({
         status: "error",
-        message: `El servicio con el id${sid} no existe`,
+        message: `El servicio con el id ${sid} no existe`,
       });
     }
     const updatedBooking = await bookingService.addServiceToBooking(bid, sid);
     res.status(200).json({ status: "success", payload: updatedBooking });
   } catch (error) {
-    res.status(500).json({ status: "error", message: error.message });
+    const statusCode =
+      error.statusCode ||
+      (error.name === "CastError" || error.name === "ValidationError"
+        ? 400
+        : 500);
+    res.status(statusCode).json({ status: "error", message: error.message });
   }
 };

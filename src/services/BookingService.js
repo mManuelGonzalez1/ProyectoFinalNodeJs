@@ -1,12 +1,12 @@
 import BookingsRepository from "../repositories/bookings.repository.js";
-import crypto from "crypto";
 
 export class BookingService {
   constructor() {
     this.repository = new BookingsRepository();
   }
   async createBooking(BookingData) {
-    const { clientName, clientEmail, date, time, status } = BookingData;
+    const { clientName, clientEmail, date, time, status, serviceId } =
+      BookingData;
     if (
       !BookingData.clientName ||
       !BookingData.clientEmail ||
@@ -14,11 +14,12 @@ export class BookingService {
       !BookingData.time ||
       !BookingData.status
     ) {
-      throw new Error("Por favor completa todos los campos");
+      const error = new Error("Por favor completa todos los campos");
+      error.statusCode = 400;
+      throw error;
     }
-    const services = [];
+    const services = serviceId ? [{ service: serviceId, quantity: 1 }] : [];
     const newBooking = {
-      id: crypto.randomUUID(),
       clientName,
       clientEmail,
       date,
@@ -35,10 +36,12 @@ export class BookingService {
     const booking = await this.repository.getById(bid);
 
     if (!booking) {
-      throw new Error(`La reserva con id ${bid} no se encuentra`);
+      const error = new Error(`La reserva con id ${bid} no se encuentra`);
+      error.statusCode = 404;
+      throw error;
     }
 
-    booking.services ??= [];
+    booking.services = booking.services || [];
     const serviceIndex = booking.services.findIndex(
       (item) => String(item.service) === String(sid),
     );
@@ -48,8 +51,7 @@ export class BookingService {
     } else {
       booking.services.push({ service: sid, quantity: 1 });
     }
-    await this.repository.addServiceToBooking(booking);
-    return booking;
+    return this.repository.addServiceToBooking(booking);
   }
 }
 export default BookingService;
