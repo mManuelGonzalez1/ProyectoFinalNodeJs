@@ -7,8 +7,8 @@ export class ServicesRepository {
   async addService(serviceData) {
     return await this.dao.createService(serviceData);
   }
-  async getAll() {
-    return await this.dao.getAll();
+  async getAll(filter = {}, sort = {}, skip = 0, limit) {
+    return await this.dao.getAll(filter, sort, skip, limit);
   }
   async getById(id) {
     return await this.dao.getById(id);

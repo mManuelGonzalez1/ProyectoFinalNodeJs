@@ -6,16 +6,34 @@ import {
   updateServices,
   removeService,
 } from "../controllers/services.controllers.js";
+import { validateRequest } from "../middlewares/validation.middleware.js";
+import {
+  createServiceSchema,
+  servicesQuerySchema,
+  updateServiceSchema,
+} from "../schemas/service.schema.js";
 
 const router = Router();
 
-router.get("/", getAllServices);
+router.get(
+  "/",
+  validateRequest({ query: servicesQuerySchema }),
+  getAllServices,
+);
 
 router.get("/:sid", getServiceId);
 
-router.post("/", createService);
+router.post(
+  "/",
+  validateRequest({ body: createServiceSchema }),
+  createService,
+);
 
-router.put("/:sid", updateServices);
+router.put(
+  "/:sid",
+  validateRequest({ body: updateServiceSchema }),
+  updateServices,
+);
 
 router.delete("/:sid", removeService);
 

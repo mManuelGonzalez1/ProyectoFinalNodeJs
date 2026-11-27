@@ -3,25 +3,12 @@ const servicesService = new ServicesService();
 
 export const getAllServices = async (req, res) => {
   try {
-    const { category, available } = req.query;
-    let services = await servicesService.getServices();
-
-    if (category) {
-      services = services.filter((service) => service.category === category);
-    }
-
-    if (available !== undefined) {
-      const requestedAvailability = available === "true";
-      services = services.filter(
-        (service) => service.available === requestedAvailability,
-      );
-    }
-
-    res.status(200).json({ status: "success", payload: services });
+    const { services, pagination } = await servicesService.getServices(
+      req.validated.query,
+    );
+    res.status(200).json({ status: "success", payload: services, pagination });
   } catch (error) {
-    res
-      .status(500)
-      .json({ status: "error", message: error.message });
+    res.status(500).json({ status: "error", message: error.message });
   }
 };
 
@@ -45,7 +32,7 @@ export const getServiceId = async (req, res) => {
 };
 export const createService = async (req, res) => {
   try {
-    const newService = await servicesService.addService(req.body); //serviceManager.addService(req.body);
+    const newService = await servicesService.addService(req.validated.body);
     res.status(201).json({
       status: "success",
       payload: newService,
@@ -62,7 +49,10 @@ export const createService = async (req, res) => {
 export const updateServices = async (req, res) => {
   try {
     const { sid } = req.params;
-    const updatedService = await servicesService.updateService(sid, req.body);
+    const updatedService = await servicesService.updateService(
+      sid,
+      req.validated.body,
+    );
     res.status(200).json({ status: "success", payload: updatedService });
   } catch (error) {
     const statusCode =

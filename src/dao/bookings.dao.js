@@ -7,6 +7,11 @@ export class BookingDao {
   async getBookingById(id) {
     return await BookingModel.findById(id);
   }
+  async getBookingByIdWithServices(id) {
+    return await BookingModel.findById(id)
+      .populate("services.service")
+      .lean();
+  }
   async addServiceToBooking(bookingData) {
     return await bookingData.save();
   }

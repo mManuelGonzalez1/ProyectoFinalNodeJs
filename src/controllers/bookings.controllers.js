@@ -6,14 +6,14 @@ const bookingService = new BookingService();
 export const getBookingsById = async (req, res) => {
   try {
     const { bid } = req.params;
-    const bookings = await bookingService.getBookingById(bid);
+    const booking = await bookingService.getBookingByIdWithServices(bid);
 
-    if (!bookings) {
+    if (!booking) {
       return res
         .status(404)
-        .json({ status: "error", message: "Servicio Agendado no encontrado" });
+        .json({ status: "error", message: "Reserva no encontrada" });
     }
-    res.status(200).json({ status: "success", payload: bookings });
+    res.status(200).json({ status: "success", payload: booking });
   } catch (error) {
     const statusCode =
       error.statusCode || (error.name === "CastError" ? 400 : 500);

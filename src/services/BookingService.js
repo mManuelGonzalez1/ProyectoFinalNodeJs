@@ -32,6 +32,9 @@ export class BookingService {
   async getBookingById(id) {
     return this.repository.getById(id);
   }
+  async getBookingByIdWithServices(id) {
+    return this.repository.getByIdWithServices(id);
+  }
   async addServiceToBooking(bid, sid) {
     const booking = await this.repository.getById(bid);
 

@@ -32,8 +32,49 @@ export class ServicesService {
     };
     return await this.repository.addService(newService);
   }
-  async getServices() {
-    return this.repository.getAll();
+  async getServices(query) {
+    if (query === undefined) {
+      const { services } = await this.repository.getAll();
+      return services;
+    }
+
+    const { category, available, page = 1, limit = 10, sort } = query;
+    const filter = {};
+    if (category) {
+      filter.category = category;
+    }
+    if (available !== undefined) {
+      filter.available = available;
+    }
+
+    const skip = (page - 1) * limit;
+    let sortOption = {};
+    if (sort === "asc") {
+      sortOption = { price: 1 };
+    }
+    if (sort === "desc") {
+      sortOption = { price: -1 };
+    }
+
+    const { services, total } = await this.repository.getAll(
+      filter,
+      sortOption,
+      skip,
+      limit,
+    );
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      services,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1 && total > 0,
+      },
+    };
   }
   async getById(id) {
     return this.repository.getById(id);
